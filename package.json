@@ -4,12 +4,13 @@
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build",
+    "build": "NODE_ENV=production vue-cli-service build",
     "test:unit": "vue-cli-service test:unit",
     "test:e2e": "vue-cli-service test:e2e",
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "glob": "^7.1.6",
     "register-service-worker": "^1.7.1",
     "vue": "^2.6.11",
     "vue-router": "^3.2.0",

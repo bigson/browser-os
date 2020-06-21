@@ -1,0 +1,32 @@
+.progress{
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    right: 0px;
+    height: 2px;
+    // width: 0%;
+    transition: width 0.2s;
+    opacity: 1;
+    z-index: 999999;
+
+    .percent{
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        right: 0;
+        width: 0%;
+        background: #fff;
+        -webkit-transition: all 0.3s;
+        transition: all 0.3s;
+    }
+
+    &.error{
+        background: #ff0000;
+    }
+
+    background: #36b04a;
+    background: -moz-linear-gradient(left, #36b04a 1%, #12aba2 50%, #29a5de 100%);
+    background: -webkit-linear-gradient(left, #36b04a 1%,#12aba2 50%,#29a5de 100%);
+    background: linear-gradient(to right, #36b04a 1%,#12aba2 50%,#29a5de 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#36b04a', endColorstr='#29a5de',GradientType=1 );
+}

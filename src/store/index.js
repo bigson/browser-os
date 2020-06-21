@@ -3,13 +3,13 @@ import Vuex from 'vuex'
 
 Vue.use(Vuex)
 
-export default new Vuex.Store({
-  state: {
-  },
-  mutations: {
-  },
-  actions: {
-  },
-  modules: {
-  }
-})
+// Vue.config.devtools = true
+const debug = process.env.NODE_ENV !== 'production';
+export function createStore() {
+    return new Vuex.Store({
+        modules: {
+        },
+        strict: debug,
+        // strict: true,
+    })
+}

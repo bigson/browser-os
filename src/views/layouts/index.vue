@@ -19,7 +19,7 @@
         name     : 'Layout',
         components: {
             progressBar,
-        }
+        },
         computed : {
             show(){
                 let layout = this.$route.meta.layout
@@ -44,15 +44,5 @@
                 this.$refs.progress.fail()
             }
         },
-        // beforeRouteEnter (to, from, next) {
-        //     console.log('beforeRouteEnter from template index')
-        //     this.start()
-        //     next()
-        // },
-        // beforeRouteUpdate (to, from, next) {
-        //     console.log('beforeRouteUpdate from template index')
-        //     this.start()
-        //     next()
-        // },
     }
 </script>

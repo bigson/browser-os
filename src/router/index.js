@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Home from '../views/home/Home.vue'
+import Desktop from '../views/desktop/Desktop.vue'
 import Login from '../views/authen/Login.vue'
 
 Vue.use(Router)
@@ -20,13 +20,13 @@ export function createRouter () {
         routes: [
                 {
                     path: '/',
-                    name: 'home',
+                    name: 'desktop',
                     meta: Object.assign({}, meta, {
                         title       : '',
                         description : '',
                     }),
                     components: {
-                        default : Home,
+                        default : Desktop,
                     }
                 },
                 {

@@ -1,29 +1,90 @@
 .window{
-	position: relative;
-	width: 500px;
-	height: 500px;
+    position: absolute;
+    width: 500px;
+    height: 500px;
+    box-shadow: 0 0 10px 0 rgba(0,0,0,.5);
+
+    z-index:10;
 
     .window__background{
-		position: absolute;
-		top:0;
-		right: 0;
-		bottom:0;
-		left:0;
-	    @include background-page;
-	    filter: blur(5px);
+        position: absolute;
+        top:0;
+        right: 0;
+        bottom:0;
+        left:0;
+        @include background-page;
+        filter: blur(5px);
+        z-index: -1;
     }
-	.window__controller{
-		.mini{
+    .window__resize{
+        $resizeSize : 4px;
+        z-index: 2;
 
-		}
-		.full{
+        & > div{
+            position: absolute;
+            background: yellow;
+        }
 
-		}
-		.close{
+        .resize-left{
+            left: 0;
+            height: 100%;
+            width : $resizeSize;
+            cursor: e-resize;
+        }
+        .resize-bottom{
+            bottom: 0;
+            width: 100%;
+            height : $resizeSize;
+            cursor: n-resize;
+        }
+        .resize-right{
+            right: 0;
+            height: 100%;
+            width : $resizeSize;
+            cursor: e-resize;
+        }
+        .resize-left-bottom{
+            left: 0;
+            bottom: 0;
+            width : $resizeSize;
+            height : $resizeSize;
+            cursor: nesw-resize;
+        }
+        .resize-right-bottom{
+            right: 0;
+            bottom: 0;
+            width : $resizeSize;
+            height : $resizeSize;
+            cursor: nw-resize;
+        }
+    }
+    .window__head-bar{
+        display: flex;
+        flex-direction: row;
+        align-items: stretch;
+        z-index: 3;
 
-		}
-	}
-	.window__content{
+        .head-bar__tabs{
 
-	}
+        }
+        .head-bar__drag{
+            flex: 1;
+            background: red;
+        }
+        .head-bar__controller{
+            .mini{
+
+            }
+            .full{
+
+            }
+            .close{
+
+            }
+        }
+
+    }
+    .window__content{
+        z-index: 1;
+    }
 }

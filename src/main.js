@@ -10,7 +10,7 @@ import Uuid from '@/mixins/uuid'
 import './registerServiceWorker'
 
 Vue.config.productionTip = false
-Vue.use(Uuid)
+Vue.mixin(Uuid)
 const router = createRouter()
 const store  = createStore()
 

@@ -1,11 +1,7 @@
-let id = 0
+let id = 1
 export default {
-    data(){
-        return {
-            $uuid : 0
-        }
-    },
     beforeCreate(){
-        this.$uuid = ++id
+        this.$uuid = id.toString()
+        id++
     }
 }

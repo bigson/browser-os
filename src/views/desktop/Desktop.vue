@@ -3,6 +3,9 @@
         <window>
             <h1>bigson</h1>
         </window>
+        <window>
+            <h2>abc</h2>
+        </window>
         <div class="taskbar"></div>
     </div>
 </template>

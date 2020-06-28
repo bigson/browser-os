@@ -1,7 +1,7 @@
 <template>
-    <div class="window" :style="styles" :id="windowId">
+    <div class="window" :style="styles" :id="windowId" @mouseDown="windowMouseDown">
         <div class="window__background"></div>
-        <div class="window__resize">
+        <div class="window__resize" v-if="resize">
             <div
                 class="resize-left"
                 @mousedown="mouseDown($event, type.RESIZE_LEFT)"></div>
@@ -30,15 +30,23 @@
                 <div class="close" id="btn-close"><span>✕</span></div>
             </div>
         </div>
-        <div class="window__content">
+        <div class="window__content" @mouseDown="windowMouseDown">
             <slot></slot>
         </div>
     </div>
 </template>
 <script>
+let zIndex = 0
 export default {
     name     : 'Window',
+    props: {
+        resize : {
+            type    : Boolean,
+            default : true
+        }
+    },
     data(){
+        zIndex ++
         return {
             pos1 : 0,
             pos2 : 0,
@@ -51,10 +59,11 @@ export default {
             resize4 : 0,
 
             styles : {
-                left : 0,
-                top  : 0,
-                width : '500px',
-                height : '500px',
+                left      : 0,
+                top       : 0,
+                width     : '500px',
+                height    : '500px',
+                'z-index' : zIndex.toString(),
                 // right : '100px',
             },
 
@@ -89,23 +98,36 @@ export default {
 
     },
     methods : {
+        windowMouseDown(){
+            console.log('window mouse down')
+            // e.stopPropagation()
+            if(this.styles['z-index'] == zIndex){
+                return
+            }
+
+            this.styles['z-index'] = ++zIndex
+        },
         mouseDown(e, type) {
-            console.log('dragMouseDown', e, e.clientX, e.clientY, type)
+            // console.log('dragMouseDown', e, e.clientX, e.clientY, type)
             e = e || window.event;
-            e.preventDefault();
+            // e.preventDefault();
             // get the mouse cursor position at startup:
             this.pos3          = e.clientX;
             this.pos4          = e.clientY;
-            document.onmouseup = this.closeDragElement
+            document.onmouseup = function() {
+                                    /* stop moving when mouse button is released:*/
+                                    document.onmouseup = null;
+                                    document.onmousemove = null;
+                                }
 
             let that = this
             // call a function whenever the cursor moves:
             document.onmousemove = function(e){
                 e = e || window.event;
                 e.preventDefault();
-                console.log('elementDrag', e.clientX, e.clientY, type)
-                console.log(that.pos1, that.pos2, that.pos3, that.pos4)
-                console.log(that.dragElement.offsetTop,that.dragElement.offsetLeft)
+                // console.log('elementDrag', e.clientX, e.clientY, type)
+                // console.log(that.pos1, that.pos2, that.pos3, that.pos4)
+                // console.log(that.dragElement.offsetTop,that.dragElement.offsetLeft)
                 // calculate the new cursor position:
                 that.pos1 = that.pos3 - e.clientX;
                 that.pos2 = that.pos4 - e.clientY;
@@ -142,44 +164,7 @@ export default {
                 }
             }
         },
-        mouseMove(e) {
-            e = e || window.event;
-            e.preventDefault();
-            console.log('elementDrag', e.clientX, e.clientY)
-            console.log(this.pos1, this.pos2, this.pos3, this.pos4)
-            console.log(this.dragElement.offsetTop,this.dragElement.offsetLeft)
-            // calculate the new cursor position:
-            this.pos1 = this.pos3 - e.clientX;
-            this.pos2 = this.pos4 - e.clientY;
-            this.pos3 = e.clientX;
-            this.pos4 = e.clientY;
 
-            // set the element's new position:
-            this.styles.top = (this.windowElement.offsetTop - this.pos2) + "px";
-            this.styles.left = (this.windowElement.offsetLeft - this.pos1) + "px";
-        },
-        closeDragElement() {
-            /* stop moving when mouse button is released:*/
-            document.onmouseup = null;
-            document.onmousemove = null;
-        },
-
-        resizeMouseDown(e){
-            e = e || window.event;
-            e.preventDefault();
-            // get the mouse cursor position at startup:
-            this.pos3 = e.clientX;
-            this.pos4 = e.clientY;
-            document.onmouseup = this.closeResizeElement;
-            // call a function whenever the cursor moves:
-            document.onmousemove = this.elementResize;
-        },
-        elementResize(){
-
-        },
-        closeResizeElement(){
-
-        },
     },
 }
 </script>

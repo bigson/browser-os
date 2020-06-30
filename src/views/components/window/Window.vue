@@ -1,7 +1,7 @@
 <template>
-    <div class="window" :style="styles" :id="windowId" @mouseDown="windowMouseDown">
+    <div class="window" :style="styles" :id="windowId" @mousedown="windowMouseDown">
         <div class="window__background"></div>
-        <div class="window__resize" v-if="resize">
+        <div class="window__resize" v-if="!noResize">
             <div
                 class="resize-left"
                 @mousedown="mouseDown($event, type.RESIZE_LEFT)"></div>
@@ -30,7 +30,7 @@
                 <div class="close" id="btn-close"><span>✕</span></div>
             </div>
         </div>
-        <div class="window__content" @mouseDown="windowMouseDown">
+        <div class="window__content">
             <slot></slot>
         </div>
     </div>
@@ -40,9 +40,9 @@ let zIndex = 0
 export default {
     name     : 'Window',
     props: {
-        resize : {
+        noResize : {
             type    : Boolean,
-            default : true
+            default : false
         }
     },
     data(){
@@ -99,7 +99,7 @@ export default {
     },
     methods : {
         windowMouseDown(){
-            console.log('window mouse down')
+            // console.log('window mouse down')
             // e.stopPropagation()
             if(this.styles['z-index'] == zIndex){
                 return
@@ -108,7 +108,7 @@ export default {
             this.styles['z-index'] = ++zIndex
         },
         mouseDown(e, type) {
-            // console.log('dragMouseDown', e, e.clientX, e.clientY, type)
+            // console.log('MouseDown', e, e.clientX, e.clientY, type)
             e = e || window.event;
             // e.preventDefault();
             // get the mouse cursor position at startup:

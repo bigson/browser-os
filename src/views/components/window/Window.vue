@@ -1,6 +1,6 @@
 <template>
     <div class="window" :style="styles" :id="windowId" @mousedown="windowMouseDown">
-        <div class="window__background"></div>
+        <div class="window__background background-mode"></div>
         <div class="window__resize" v-if="!noResize">
             <div
                 class="resize-left"

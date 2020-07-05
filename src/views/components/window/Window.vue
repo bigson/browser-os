@@ -99,6 +99,7 @@ export default {
     },
     methods : {
         windowMouseDown(){
+        this.captionBackground()
             // console.log('window mouse down')
             // e.stopPropagation()
             if(this.styles['z-index'] == zIndex){
@@ -165,6 +166,47 @@ export default {
             }
         },
 
+        captionBackground(){
+            let
+                canvas = document.createElement('canvas'),
+                ctx    = canvas.getContext('2d'),
+                desktop = document.querySelector('.desktop'),
+
+                styles = document.querySelectorAll('style'),
+                data   =
+                `<svg xmlns="http://www.w3.org/2000/svg" width="${desktop.offsetWidth}" height="${desktop.offsetHeight}">
+                    <g class="foreignObjectWrapper">
+                    <foreignObject width="${desktop.offsetWidth}" height="${desktop.offsetHeight}">
+                        <div xmlns="http://www.w3.org/1999/xhtml" style="width:${desktop.offsetWidth}px;height:${desktop.offsetHeight}px">
+                            ${Object.values(styles).map(x => x.outerHTML).join('').replace(/url\((['|"])/ig, '$&http://localhost:8080')}
+                            <div class="desktop" style="width:${desktop.offsetWidth}px;height:${desktop.offsetHeight}px">
+                                ${desktop.innerHTML}
+                            </div>
+                        </div>
+                    </foreignObject>
+                    </g>
+                </svg>`
+
+                var DOMURL = window.URL || window.webkitURL || window;
+
+                var img = new Image();
+                var svg = new Blob([data], {
+                  type: 'image/svg+xml;charset=utf-8'
+                });
+                var url = DOMURL.createObjectURL(svg);
+
+                console.log( url)
+
+                img.onload = function() {
+                  ctx.drawImage(img, 0, 0);
+
+
+                    var img    = canvas.toDataURL("image/png");
+                  DOMURL.revokeObjectURL(url);
+                }
+
+                // img.src = url;
+        }
     },
 }
 </script>

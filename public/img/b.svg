@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="535" height="484">
+	<style>
+		.bannerDiv {
+  width: 100%;
+  height: 100%;
+  background-image: url('http://www.newdesignfile.com/postpic/2011/10/header-banner-design_64599.jpg');
+  -webkit-background-size: 100% 100%;
+  -moz-background-size: 100% 100%;
+  -o-background-size: 100% 100%;
+  background-size: 100% 100%;
+}
+
+body {
+  background: #bbb;
+}
+	</style>
+  <g transform="translate(3,155)" style="shape-rendering: crispedges;">
+    <g class="grandparent">
+      <rect y="-155" width="529" height="155"></rect>
+      <foreignObject y="-155" width="529" height="155">
+        <div  xmlns="http://www.w3.org/1999/xhtml" class="bannerDiv"></div>
+      </foreignObject>
+      <text x="6" y="-19.375" dy=".75em" style="fill: rgb(165, 216, 103);">The text here</text>
+    </g>
+  </g>
+</svg>

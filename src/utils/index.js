@@ -1,3 +1,12 @@
+export function arrayBufferToBase64(buffer) {
+    let binary = '',
+        bytes  = [].slice.call(new Uint8Array(buffer))
+
+    bytes.forEach((b) => binary += String.fromCharCode(b));
+
+    return window.btoa(binary);
+}
+
 /**
  * Simple object check.
  * @param item
@@ -34,105 +43,6 @@ export function mergeDeep(target, ...sources) {
     return mergeDeep(target, ...sources);
 }
 
-export function generateNewsContent(html){
-    let getHead     = /<h(\d)([^\>]+)*\>(((?!\<\/h).)+)<\/h\d>(((?!\<h).)*)/g, // /<h(\d)([^\>]+)\>(((?!\<\/h).)+)/g,
-        getText     = /<\/?((?!\/?>).)+>/g,
-        getTeaser   = /((?!\<h\d).)+/,
-        list        = [],
-        preList     = {},
-        tOC         = [],
-        teaser      = '',
-        description = [],
-        m
-
-    teaser = getTeaser.exec(html)
-    if(teaser){
-        teaser = getTextFromHtml(teaser[0])
-    }else{
-        teaser = ''
-    }
-
-    while((m = getHead.exec(html))){
-        let h       = m[1],
-            attrs   = m[2],
-            text    = m[3],
-            next    = m[5],
-            v       = getTextFromHtml(text),
-            hash    = createlinkHash(v),
-            htag    = '<h' + h + ' id="' + hash + '" ' + attrs + '>'
-                        + text
-                        + '</h' + h + '>',
-            childs  = next.split(/(\<img [^>]+>)/)
-
-        childs = childs.map(x => {
-            if(x.startsWith('<img')){
-                let miMatch   = x.match(/(\w+)\=\"([^\"]+)\"/g),
-                    imgTag    = {}
-
-                if(!miMatch){
-                    return x
-                }
-
-                let map   = miMatch.forEach(y => {
-                        let param = y.replace(/\"/g, ''),
-                            s     = param.split('='),
-                            nameMatch = ''
-
-                        if(s[0] == 'src' && s[1].startsWith('https://cdn.vatgia.vn/')){
-                            // nếu mà từ cdn vật giá thì add name
-                            if(nameMatch = s[1].match(/\d+\-\w\w\w\.\w{3,4}/)){
-                                imgTag.name = nameMatch[0]
-                            }
-                        }
-
-                        imgTag[s[0]] = s[1]
-                    })
-
-                return imgTag
-            }
-
-            return x
-        })
-
-        list.push({h: h, value : v, href : hash})
-        description = description.concat([htag], childs)
-    }
-
-    if(list.length){
-        for(let i = 0; i < list.length; i++){
-            let e       = Object.assign({}, list[i]),
-                root    = tOC[tOC.length - 1]
-
-            if(e.h == 2){
-                e.h3 = []
-                tOC.push(e)
-                continue
-            }
-
-            for(let j = 3; j <= e.h-1; j++){
-                // console.log('root, rooth', root, root['h'+j])
-                if(!root['h'+j]){
-                    root['h'+j] = []
-                    break
-                }
-                root = root['h' + j][root['h' + j].length-1]
-            }
-            // console.log('root,e', root, e)
-            root['h' + e.h].push(e)
-        }
-    }
-
-    return [teaser, tOC, description]
-}
-
-function createTOC(list, item){
-
-}
-
-export function getTextFromHtml(html){
-    return html.replace(/<\/?((?!\/?>).)+>/g, '')
-}
-
 export function createlinkHash(text){
     text = removeAccent(text)
     text = text.replace(/[\W|\s]+/g, '_')
@@ -154,38 +64,6 @@ export function removeAccent(text){
 }
 
 /**
- * Tạo url ảnh từ tên ảnh
- * @param  {[type]}  name [description]
- * @param  {Boolean} size [description]
- * @return {[type]}       [description]
- */
-export function pictureSource(name, size = false){
-    let time
-    if(time = /^\d+/.exec(name)){
-        let tz      = 25200000, // 7 * 60 * 60 * 1000
-            date    = new Date(time * 1000 + tz)
-
-        if(size){
-            // 100x100
-            // 100
-            // w100
-            // h100
-            return 'https://cdn.vatgia.vn/pictures/thumb'
-                    + '/' + size
-                    + '/' + date.getUTCFullYear() + '/' + ('0' + (date.getUTCMonth() + 1)).slice(-2)
-                    + '/' + name;
-        }
-        return 'https://cdn.vatgia.vn/pictures/thicongtot'
-                    + '/' + date.getUTCFullYear()
-                    + '/' + ('0' + (date.getUTCMonth() + 1)).slice(-2)
-                    + '/' + ('0' + date.getUTCDate()).slice(-2)
-                    + '/' + name;
-    }else{
-        return name
-    }
-}
-
-/**
  * Create new object from exist object with deep direct
  * @param  {[type]} obj [description]
  * @return {[type]}     [description]
@@ -193,11 +71,11 @@ export function pictureSource(name, size = false){
 export function clone(obj) {
     if (obj === null || typeof (obj) !== 'object' || 'isActiveClone' in obj)
         return obj;
-
+    let temp
     if (obj instanceof Date)
-        var temp = new obj.constructor(); //or new Date(obj);
+        temp = new obj.constructor(); //or new Date(obj);
     else
-        var temp = obj.constructor();
+        temp = obj.constructor();
 
     for (var key in obj) {
         if (Object.prototype.hasOwnProperty.call(obj, key)) {
@@ -264,36 +142,37 @@ export function niceColor(clr) {
     switch(type){
         case 'rgb':
             return hsl2Rgb(color)
-            break;
+            // break;
         case 'hex':
             return hsl2Hex(color)
-            break;
+            // break;
         case 'hsl':
             return color
-            break;
+            // break;
     }
 }
 // random borrowed from https://codepen.io/rhymes/pen/VXJabv
-function randomColorVal() {
+/*function randomColorVal() {
     // Should be 0 to 255 inclusive
     return Math.floor((Math.random() * 256));
-}
-function toHex(intVal) {
+}*/
+/*function toHex(intVal) {
     let hex = intVal.toString(16);
     if (hex.length === 1){
       hex = '0' + hex;
     }
     return hex;
-}
-function hexFromInts(r, g, b){
+}*/
+/*function hexFromInts(r, g, b){
     return '#' + toHex(r) + toHex(g) + toHex(b);
-}
-function randomHex() {
-    let r = randomColorVal();
-    let g = randomColorVal();
-    let b = randomColorVal();
-    return hexFromInts(r, g, b);
-}
+}*/
+/*function randomHex() {
+    let r = randomColorVal(),
+        g = randomColorVal(),
+        b = randomColorVal()
+
+    return hexFromInts(r, g, b)
+}*/
 
 function rgb2hsl(clr) {
     let rgb = clr.substring(4, clr.length-1).replace(/ /g, '').split(',');
@@ -324,10 +203,10 @@ function rgbToHsl(r, g, b) {
 
     return [ h, s, l ];
 }
-function RGBToHex(r,g,b) {
-    r = r.toString(16);
-    g = g.toString(16);
-    b = b.toString(16);
+/*function RGBToHex(r,g,b) {
+    r = r.toString(16)
+    g = g.toString(16)
+    b = b.toString(16)
 
     if (r.length == 1)
     r = "0" + r;
@@ -337,9 +216,9 @@ function RGBToHex(r,g,b) {
     b = "0" + b;
 
     return "#" + r + g + b;
-}
+}*/
 
-function hexToRgb(hex) {
+/*function hexToRgb(hex) {
     let result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex),
         r      = parseInt(result[1], 16),
         g      = parseInt(result[2], 16),
@@ -352,7 +231,7 @@ function hexToRgb(hex) {
         g: parseInt(result[2], 16),
         b: parseInt(result[3], 16)
     } : null;
-}
+}*/
 
 function hexToHSL(hex) {
     let result  = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex),
@@ -432,7 +311,7 @@ function hslToHex(h, s, l) {
     return `#${toHex(r)}${toHex(g)}${toHex(b)}`;
 }
 
-function hsl2Rgb (clr){
+function hsl2Rgb (hsl){
     let _hsl = hsl.substring(4, hsl.length-1).replace(/ /g, '').split(',')
 
     return hslToRgb(_hsl[0], _hsl[1], _hsl[2])
@@ -490,24 +369,3 @@ function hslToRgb (h, s, l) {
     return { r: r, g: g, b: b }
 
 }
-/*export function getPictureCDN(name, size = false){
-    let time
-    if(time = /^\d+/.exec(name)){
-        let tz      = 25200000, // 7 * 60 * 60 * 1000
-            date    = new Date(time * 1000 + tz)
-
-        if(size){
-            return 'https://cdn.vatgia.vn/pictures/thumb'
-                    + '/' + size
-                    + '/' + date.getUTCFullYear() + '/' + ('0' + (date.getUTCMonth() + 1)).slice(-2)
-                    + '/' + name;
-        }
-        return 'https://cdn.vatgia.vn/pictures/thicongtot'
-                    + '/' + date.getUTCFullYear()
-                    + '/' + ('0' + (date.getUTCMonth() + 1)).slice(-2)
-                    + '/' + ('0' + date.getUTCDate()).slice(-2)
-                    + '/' + name;
-    }else{
-        return name
-    }
-}*/

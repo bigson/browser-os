@@ -24,11 +24,28 @@ module.exports = {
         }
 
     },
+    // output: {
+    //     publicPath: 'http://localhost:8080/'
+    //    // ... more devServer config
+    // },
     css: {
         loaderOptions: {
+            // css: {
+            //     url: (url, resourcePath) => {
+            //         console.log('loader', url, resourcePath)
+            //         return 'http://ac.com/' + url ;
+            //     },
+            //     // publicPath: '/assets/img/'
+            // },
             scss: {
-                prependData: `@import "~@/config/variables.scss";`
+                prependData: `@import "~@/config/variables.scss";`,
+                // includePaths : ['http://localhost:8080/']
             },
+            // file : {
+            //     outputPath: 'assets/',
+            //     publicPath: 'http://localhost:8080/',// <- here
+            //     emitFile: true
+            // }
         }
     },
     pages: {

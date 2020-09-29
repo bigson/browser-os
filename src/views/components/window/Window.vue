@@ -31,7 +31,8 @@
             </div>
         </div>
         <div class="window__content">
-            <slot></slot>
+            <div v-if="loading" class="wrap-loader"><div class="loader"></div></div>
+            <slot v-else></slot>
         </div>
     </div>
 </template>
@@ -45,6 +46,10 @@ export default {
     // mixins   : [captionHtmlElement],
     props: {
         noResize : {
+            type    : Boolean,
+            default : false
+        },
+        loading : {
             type    : Boolean,
             default : false
         }
@@ -62,7 +67,7 @@ export default {
             resize3 : 0,
             resize4 : 0,
 
-            styles : {
+            stylesBase : {
                 left      : 0,
                 top       : 0,
                 width     : '500px',
@@ -95,11 +100,32 @@ export default {
         },
         dragElement(){
             return document.querySelector('#' + this.dragId)
+        },
+        styles(){
+            let style = this.$props.style,
+                obj   = {}
+
+            if(style){
+                if(typeof style == 'object'){
+                    return Object.assign(this.stylesBase, style)
+                }else if(typeof style == 'string'){
+                    for(let i of style.split(';')){
+                        let j = i.split('=')
+                        if(j.length == 2){
+                            obj[j[0]] = j[1]
+                        }
+                    }
+
+                    return Object.assign(this.stylesBase, obj)
+                }
+            }
+
+            return this.stylesBase
         }
     },
     mounted(){
         // this.dragElement.onmousedown = this.mouseDown
-
+        // console.log(this.$props, this.$attrs)
     },
     methods : {
         windowMouseDown(){

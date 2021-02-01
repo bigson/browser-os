@@ -90,10 +90,10 @@ export default {
     },
     computed : {
         windowId(){
-            return 'window_' + this.$uuid
+            return 'window_' + this.id2
         },
         dragId(){
-            return 'window_drag' + this.$uuid
+            return 'window_drag' + this.id2
         },
         windowElement(){
             return document.querySelector('#' + this.windowId)

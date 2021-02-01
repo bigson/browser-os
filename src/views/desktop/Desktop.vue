@@ -1,6 +1,9 @@
 <template>
     <div class="desktop">
         <Caculator />
+        <Caculator />
+        <Caculator />
+        <Caculator />
     </div>
 </template>
 
